@@ -9,56 +9,73 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
             integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
             crossorigin="anonymous"></script>
-    <script>
-        const showCitizens = () => {
-            fetch('http://localhost:8080/citizens')
-                .then(response => response.json())
-                .then(users => {
-                    users.forEach(user => {
-                        $("#citizenGrid").append('<li class="list-group-item">' +
-                            '<div>' + user.birthDate + '</div>' +
-                            '<div>' + user.firstname + '</div>' +
-                            '<div>' + user.id + '</div>' +
-                            '<div>' + user.address + '</div>' +
-                            '<div>' + user.country + '</div>' +
-                            '</li>');
-                    });
-                })
-                .catch(error => console.log(error));
-        }
-
-        const showCitizenById = () => {
-            fetch('http://localhost:8080/citizens/' + $("#citizenId").val())
-                .then(response => response.json())
-                .then(user => {
-                        $("#citizenGrid").append('<li class="list-group-item">' +
-                            '<div>' + user.birthDate + '</div>' +
-                            '<div>' + user.firstname + '</div>' +
-                            '<div>' + user.id + '</div>' +
-                            '<div>' + user.address + '</div>' +
-                            '<div>' + user.country + '</div>' +
-                            '</li>');
-                    }
-                )
-                .catch(error => console.log(error));
-        }
-
-        const cleanCitizens = () => {
-            $("#citizenGrid").empty();
-        }
-
-    </script>
 </head>
+<script>
+    const loadAllCitizens = () => {
+        let domain = window.location.origin;
+        fetch(domain + '/citizens')
+            .then(response => response.json())
+            .then(citizens => {
+                citizens.forEach(user => {
+                    $("#citizenGrid")
+                        .append('<li class="list-group-item">' +
+                            '<div>' + user.firstname + '</div>' +
+                            '<div>' + user.id + '</div>' +
+                            '<div>' + user.address + '</div>' +
+                            '<div>' + user.country + '</div>' +
+                            '</li>');
+                });
+            })
+    }
+
+    const loadAllCountries = () => {
+        let domain = window.location.origin;
+        fetch(domain + '/countries')
+            .then(response => response.json())
+            .then(countries => {
+                countries.forEach(country => {
+                    $('#allCountriesId').append($('<option>', {
+                        text: country.name
+                    }));
+                });
+            })
+    }
+
+    const addNewCitizen = () => {
+        //add missing logic
+    }
+
+    const reloadPage = () => {
+        cleanCitizens();
+        loadAllCitizens();
+    }
+
+    const cleanCitizens = () => {
+        $("#citizenGrid").empty();
+    }
+
+    $(document).ready(function () {
+        loadAllCountries();
+    });
+
+</script>
 <body>
+
 <div class="container">
-    <label for="citizenId">Email address</label>
-    <input id="citizenId" placeholder="Put citizen Id here">
-    <button type="button" onclick="showCitizens()" class="p-2 m-2 btn btn-primary">Show citizens</button>
-    <button type="button" onclick="showCitizenById()" class="p-2 m-2 btn btn-primary">Show citizens</button>
+    <div>
+        <label for="newCitizenNameId">New Citizen Name</label>
+        <input id="newCitizenNameId" placeholder="Put new citizen name here">
+    </div>
+    <!--add missing components-->
+    <button type="button" onclick="loadAllCitizens()" class="p-2 m-2 btn btn-primary">Show citizens</button>
+    <button type="button" onclick="addNewCitizen()" class="p-2 m-2 btn btn-primary">Add new citizen</button>
     <button type="button" onclick="cleanCitizens()" class="p-2 m-2 btn btn-primary">Clean citizens</button>
+
     <ul class="list-group" id="citizenGrid">
     </ul>
+
 </div>
 
 </body>
+
 </html>
